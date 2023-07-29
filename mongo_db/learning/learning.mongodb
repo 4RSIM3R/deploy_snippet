@@ -1,0 +1,7 @@
+use('learning')
+
+db.first.find({
+    category: {
+        $exists: false
+    }
+})

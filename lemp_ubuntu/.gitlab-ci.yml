@@ -1,0 +1,23 @@
+stages:
+  - sync_dev_server
+
+sync_to_server:
+  image: alpine:latest
+  stage: sync_dev_server
+  only:
+    - main
+  before_script:
+    - apk update && apk add openssh-client rsync sshpass
+    - eval $(ssh-agent -s)
+    - echo "$DEV_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan $DEV_SERVER_IP >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+  script:
+    - echo "Sync to dev server"
+    - rsync -atv --cvs-exclude --delete --progress ./ root@$DEV_SERVER_IP:/var/www/html
+    - ssh root@$DEV_SERVER_IP "cd /var/www/html && composer install --no-interaction"
+    - ssh root@$DEV_SERVER_IP "cd /var/www/html && cp .env.production .env"
+    # - ssh root@$DEV_SERVER_IP "cd /var/www/html && php spark migrate:refresh"
+    # - ssh root@$DEV_SERVER_IP "cd /var/www/html && php spark db:seed DatabaseSeeder"

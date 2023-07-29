@@ -1,0 +1,5 @@
+use('kampus')
+
+db.mahasiswa.deleteMany({"prodi" : {$not: {$eq: "Informatika"}}})
+
+db.mahasiswa.find()

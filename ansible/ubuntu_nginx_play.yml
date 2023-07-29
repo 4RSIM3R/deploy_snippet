@@ -1,0 +1,9 @@
+---
+- name: Update web servers
+  hosts: belajar
+
+  tasks:
+  - name: check if nginx is installed
+    apt:
+      name: nginx
+      state: present
