@@ -32,10 +32,8 @@ apt install php8.2-common \
  
 # install pecl
 
-apt install php-dev -y
-
-apt install php8.2-openswoole -y
-
+apt install php-dev \
+apt install php8.2-openswoole \
 pecl install openswoole -y
 
 # Install composer
